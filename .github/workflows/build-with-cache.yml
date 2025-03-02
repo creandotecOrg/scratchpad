@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v3
     - name: Restore Cache
       id: cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.npm
         key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -28,11 +28,11 @@ jobs:
     - run: npm run build --if-present    
     - name: Save Cache    
       if: steps.cache.outputs.cache-hit != 'true'
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.npm
         key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: my-app
         path: dist/
