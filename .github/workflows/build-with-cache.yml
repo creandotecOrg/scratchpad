@@ -1,38 +1,19 @@
-name: Node.js CI - with cache
-
 on:
-  workflow_dispatch:
   push:
-
+    branches:
+      - main
+  pull_request:
+    branches:
+      - ci/*
+name: environment test
 jobs:
-  build:
+  live-job:
+    environment: Live
     runs-on: ubuntu-latest
     steps:
-    - name: checkout code
-      uses: actions/checkout@v3
-    - name: Restore Cache
-      id: cache
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-npm-
-    - name: Use Node.js 14.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 14.x
-        cache: 'npm'
-    - name: run build
-      run: npm ci
-    - run: npm run build --if-present    
-    - name: Save Cache    
-      if: steps.cache.outputs.cache-hit != 'true'
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-    - uses: actions/upload-artifact@v4
-      with:
-        name: my-app
-        path: dist/
+      - run: echo "${{ vars.ENV_VAL }}" >> $GITHUB_STEP_SUMMARY
+  dev:
+    environment: Dev
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ vars.ENV_VAL }}" >> $GITHUB_STEP_SUMMARY
